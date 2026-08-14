@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MindSphere — Understand Emotions. Predict Fear. Build Confidence.</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
+<nav class="sidebar" id="appSidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <div class="logo-icon">🧠</div>
+      <span class="logo-name">MindSphere</span>
+    </div>
+    <div class="logo-tag">Mental Wellness Platform</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="navigate('dashboard')">
+      <span class="nav-icon">🏠</span> Dashboard
+      <div class="pulse-ring" id="aiStatusDot" title="Checking AI connection..."></div>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Core Modules</div>
+    <div class="nav-item" onclick="navigate('fearmap')">
+      <span class="nav-icon">🗺️</span> FearMap
+    </div>
+    <div class="nav-item" onclick="navigate('situation')">
+      <span class="nav-icon">🔍</span> Situation Assessment
+    </div>
+    <div class="nav-item" onclick="navigate('emotion')">
+      <span class="nav-icon">💬</span> Emotion Detection
+    </div>
+    <div class="nav-item" onclick="navigate('facial')">
+      <span class="nav-icon">📷</span> Facial Analysis
+    </div>
+    <div class="nav-item" onclick="navigate('simulator')">
+      <span class="nav-icon">🎭</span> Exposure Simulator
+    </div>
+    <div class="nav-item" onclick="navigate('music')">
+      <span class="nav-icon">🎵</span> Emotion Music
+    </div>
+    <div class="nav-item" onclick="navigate('reco')">
+      <span class="nav-icon">💡</span> Recommendations
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Tracking</div>
+    <div class="nav-item" onclick="navigate('journal')">
+      <span class="nav-icon">📓</span> Mood Journal
+    </div>
+    <div class="nav-item" onclick="navigate('goals')">
+      <span class="nav-icon">🎯</span> Daily Goals
+    </div>
+    <div class="nav-item" onclick="navigate('analytics')">
+      <span class="nav-icon">📊</span> My Progress
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Take a Break</div>
+    <div class="nav-item" onclick="navigate('calmzone')" style="background:rgba(159,211,168,.1);border-color:rgba(159,211,168,.3)">
+      <span class="nav-icon">🌿</span> Calm Zone
+      <span class="nav-badge" style="background:var(--green)">New</span>
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Community</div>
+    <div class="nav-item" onclick="navigate('vent')">
+      <span class="nav-icon">💭</span> Vent Space
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Help &amp; Safety</div>
+    <div class="nav-item" onclick="navigate('support')">
+      <span class="nav-icon">🆘</span> Get Support
+    </div>
+    <div class="nav-item" onclick="navigate('emergency')" style="background:rgba(242,139,130,.08);border-color:rgba(242,139,130,.3)">
+      <span class="nav-icon">🚨</span> Emergency & SOS
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">M</div>
+      <div>
+        <div class="user-name">Mahii</div>
+        <div class="user-status">● Tracking active</div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<button id="sosFloatBtn" onclick="openSOS()" title="Emergency SOS">🆘</button>
+
+<div id="call-fallback-bar" style="display:none;position:fixed;left:16px;right:16px;bottom:16px;z-index:400;background:#2D3748;color:#fff;padding:12px 16px;border-radius:10px;align-items:center;gap:10px;font-size:12.5px;box-shadow:0 8px 24px rgba(0,0,0,.3)">
+  <span>Number copied.</span>
+  <button onclick="document.getElementById('call-fallback-bar').style.display='none'" style="margin-left:auto;background:none;border:none;color:#fff;font-size:16px;cursor:pointer">✕</button>
+</div>
+
+<!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+<div class="main">
+  <div class="topbar">
+    <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
+    <div class="page-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-actions">
+      <div class="mood-pill" id="current-mood-pill">😐 No analysis yet</div>
+      <button class="btn btn-primary" style="padding:7px 14px;font-size:12px" onclick="navigate('fearmap')">Run FearMap</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+<!-- ════════════ DASHBOARD ════════════ -->
+<div class="page active" id="page-dashboard">
+
+  <div id="ai-status-banner" style="display:none;padding:12px 16px;border-radius:10px;margin-bottom:18px;font-size:12px;line-height:1.6"></div>
+
+  <!-- Hero — no fake numbers -->
+  <div style="padding:28px 0 24px;border-bottom:1px solid var(--border);margin-bottom:24px">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan-text);margin-bottom:10px">Welcome back, Mahii</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;line-height:1.1;margin-bottom:10px;background:linear-gradient(135deg,var(--white) 40%,var(--lavender));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Understand Your Mind.<br>Build Confidence Daily.</div>
+    <div style="font-size:13.5px;color:var(--muted);margin-bottom:20px;max-width:460px;line-height:1.6">Run a FearMap analysis to populate your dashboard. All scores are generated from your real inputs — nothing is hardcoded.</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="navigate('fearmap')">🗺️ Run FearMap</button>
+      <button class="btn btn-outline" onclick="navigate('simulator')">🎭 Practice Now</button>
+      <button class="btn btn-cyan" onclick="navigate('emotion')">💬 Detect Emotion</button>
+    </div>
+  </div>
+
+  <!-- Stats — empty until analysed -->
+  <div class="grid-4 mb-24" id="dash-stats">
+    <div class="stat-card">
+      <div class="stat-label">Confidence Score</div>
+      <div class="stat-value" id="dash-conf" style="color:var(--muted);font-size:18px">Run analysis</div>
+      <div class="stat-change" id="dash-conf-sub" style="color:var(--muted);font-size:11px">No data yet</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Stress Level</div>
+      <div class="stat-value" id="dash-stress" style="color:var(--muted);font-size:18px">Run analysis</div>
+      <div class="stat-change" id="dash-stress-sub" style="color:var(--muted);font-size:11px">No data yet</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Fear Score</div>
+      <div class="stat-value" id="dash-fear" style="color:var(--muted);font-size:18px">Run analysis</div>
+      <div class="stat-change" id="dash-fear-sub" style="color:var(--muted);font-size:11px">From FearMap</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Journal Entries</div>
+      <div class="stat-value" id="dash-journal-count" style="color:var(--cyan-text)">0</div>
+      <div class="stat-change" style="color:var(--muted);font-size:11px">This session</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-20">
+    <!-- Brainwave canvas -->
+    <div class="card">
+      <div class="card-title">🧠 Emotion Pulse Visualizer</div>
+      <div class="card-sub" style="font-size:11px;color:var(--orange)">⚠ Prototype visualization — not connected to live sensor data</div>
+      <div class="brain-canvas-wrap">
+        <canvas id="brainCanvas" height="110"></canvas>
+      </div>
+    </div>
+
+    <!-- Active triggers — empty state first -->
+    <div class="card">
+      <div class="card-title">⚡ Detected Triggers</div>
+      <div class="card-sub">Populated after FearMap analysis</div>
+      <div id="dash-triggers">
+        <div class="empty-state">
+          <span class="empty-icon">🗺️</span>
+          <div class="empty-title">No triggers detected yet</div>
+          <div class="empty-sub">Run a FearMap analysis to see which factors are contributing to your stress and fear today.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent activity -->
+  <div class="card" id="dash-activity">
+    <div class="card-title">⏱ Recent Activity</div>
+    <div class="card-sub">Your session history</div>
+    <div id="activity-list">
+      <div class="empty-state" style="padding:20px">
+        <span class="empty-icon">📋</span>
+        <div class="empty-title">No activity yet</div>
+        <div class="empty-sub">Start using the modules — each interaction is logged here.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ FEARMAP ════════════ -->
+<div class="page" id="page-fearmap">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🗺️ FearMap — Trigger Detection</div>
+      <div class="section-sub">Input your daily metrics → AI predicts your fear profile</div>
+    </div>
+  </div>
+
+  <div class="model-banner">
+    <strong>How scores are calculated:</strong> Fear score = weighted formula using sleep deficit, screen time, study imbalance, social withdrawal, and stressor severity. Confidence is inverse-weighted from the same inputs. AI explanation is generated by Claude based on your exact values. <strong>No data is hardcoded.</strong>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">📥 Today's Inputs</div>
+      <div class="card-sub">Drag sliders to match your actual situation</div>
+
+      <div class="range-wrap">
+        <div class="range-label"><span>Sleep Last Night</span><span id="sleep-val" style="color:var(--cyan-text)">6h</span></div>
+        <input type="range" min="2" max="10" value="6" id="sleep-range" oninput="document.getElementById('sleep-val').textContent=this.value+'h'">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Screen Time (hrs)</span><span id="screen-val" style="color:var(--orange)">5h</span></div>
+        <input type="range" min="0" max="16" value="5" id="screen-range" oninput="document.getElementById('screen-val').textContent=this.value+'h'">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Study Duration (hrs)</span><span id="study-val" style="color:var(--violet)">3h</span></div>
+        <input type="range" min="0" max="12" value="3" id="study-range" oninput="document.getElementById('study-val').textContent=this.value+'h'">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Social Interaction</span><span id="social-val" style="color:var(--green)">50%</span></div>
+        <input type="range" min="0" max="100" value="50" id="social-range" oninput="document.getElementById('social-val').textContent=this.value+'%'">
+      </div>
+
+      <div class="mb-16">
+        <div style="font-size:12.5px;margin-bottom:7px;color:var(--muted)">Upcoming stressors</div>
+        <textarea class="ai-input" rows="3" id="stressor-input" placeholder="e.g. Placement interview in 2 days, 3 assignments due, haven't prepared well..."></textarea>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" id="fearmap-btn" onclick="runFearMap()">🧠 Analyze</button>
+    </div>
+
+    <div>
+      <div class="card mb-16">
+        <div class="card-title">⚡ Fear Prediction</div>
+        <div class="card-sub">Calculated from your inputs above</div>
+        <div id="fear-empty" class="empty-state">
+          <span class="empty-icon">📊</span>
+          <div class="empty-title">Awaiting Analysis</div>
+          <div class="empty-sub">Click Analyze to generate your fear score from the inputs you provided.</div>
+        </div>
+        <div id="fear-result" style="display:none">
+          <div style="text-align:center;padding:16px 0">
+            <div id="fear-score-display" style="font-family:'Space Grotesk',sans-serif;font-size:52px;font-weight:700;line-height:1"></div>
+            <div id="fear-level-display" style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px"></div>
+          </div>
+          <div style="margin-bottom:10px">
+            <div class="emotion-bar-wrap">
+              <div class="emotion-bar-header"><span>Exam / Academic Fear</span><span id="fm-exam" style="color:var(--red)"></span></div>
+              <div class="emotion-bar-track"><div class="emotion-bar-fill" id="fm-exam-bar" style="width:0%;background:var(--red)"></div></div>
+            </div>
+            <div class="emotion-bar-wrap">
+              <div class="emotion-bar-header"><span>Social Anxiety</span><span id="fm-social" style="color:var(--orange)"></span></div>
+              <div class="emotion-bar-track"><div class="emotion-bar-fill" id="fm-social-bar" style="width:0%;background:var(--orange)"></div></div>
+            </div>
+            <div class="emotion-bar-wrap">
+              <div class="emotion-bar-header"><span>Performance Fear</span><span id="fm-perf" style="color:var(--violet)"></span></div>
+              <div class="emotion-bar-track"><div class="emotion-bar-fill" id="fm-perf-bar" style="width:0%;background:var(--violet)"></div></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap" id="fear-tags"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🤖 AI Insight</div>
+        <div class="card-sub">Claude analyzes your specific inputs</div>
+        <div class="ai-response" id="fearmap-response">Enter your daily details and click Analyze to get a personalized breakdown of your fear triggers and coping strategies.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ SITUATION ASSESSMENT (formerly FearLens) ════════════ -->
+<div class="page" id="page-situation">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🔍 Situation Assessment</div>
+      <div class="section-sub">Understand the anxiety factors in your current environment</div>
+    </div>
+  </div>
+
+  <div class="model-banner">
+    <strong>What this module does:</strong> Based on your selected situation and additional context, AI identifies the psychological stressors present and gives targeted coping strategies. A future version would use GPS + camera for automatic detection. <strong>This is a self-report assessment.</strong>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">📍 Current Situation</div>
+      <div class="card-sub">Select where you are and add context</div>
+
+      <div class="env-grid" id="env-grid">
+        <div class="env-option" onclick="selectEnv(this,'Exam Hall')"><span class="env-icon">📝</span>Exam Hall</div>
+        <div class="env-option" onclick="selectEnv(this,'Classroom')"><span class="env-icon">🏫</span>Classroom</div>
+        <div class="env-option" onclick="selectEnv(this,'Interview Room')"><span class="env-icon">💼</span>Interview Room</div>
+        <div class="env-option" onclick="selectEnv(this,'Seminar / Stage')"><span class="env-icon">🎤</span>Seminar / Stage</div>
+        <div class="env-option" onclick="selectEnv(this,'Large Crowd')"><span class="env-icon">👥</span>Large Crowd</div>
+        <div class="env-option" onclick="selectEnv(this,'Library')"><span class="env-icon">📚</span>Library</div>
+        <div class="env-option" onclick="selectEnv(this,'Group Discussion')"><span class="env-icon">💬</span>Group Discussion</div>
+        <div class="env-option" onclick="selectEnv(this,'Cafeteria')"><span class="env-icon">🍽️</span>Cafeteria</div>
+        <div class="env-option" onclick="selectEnv(this,'Home / Alone')"><span class="env-icon">🏠</span>Home / Alone</div>
+      </div>
+
+      <textarea class="ai-input" rows="2" id="sit-context" placeholder="Optional: describe anything specific about this situation..." style="margin-bottom:14px"></textarea>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="runSituation()">🔍 Assess Situation</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Situation Analysis</div>
+      <div class="card-sub">Stress factors in your environment</div>
+
+      <div id="sit-empty" class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <div class="empty-title">Select a situation first</div>
+        <div class="empty-sub">Choose an environment and click Assess to see the psychological pressure factors and how to handle them.</div>
+      </div>
+
+      <div id="sit-result" style="display:none">
+        <div class="emotion-bar-wrap">
+          <div class="emotion-bar-header"><span>Social Anxiety Risk</span><span id="social-risk-pct" style="color:var(--red)">0%</span></div>
+          <div class="emotion-bar-track"><div class="emotion-bar-fill" id="social-risk-bar" style="width:0%;background:var(--red);transition:width 1.2s ease"></div></div>
+        </div>
+        <div class="emotion-bar-wrap">
+          <div class="emotion-bar-header"><span>Performance Pressure</span><span id="perf-pct" style="color:var(--orange)">0%</span></div>
+          <div class="emotion-bar-track"><div class="emotion-bar-fill" id="perf-bar" style="width:0%;background:var(--orange);transition:width 1.2s ease"></div></div>
+        </div>
+        <div class="emotion-bar-wrap">
+          <div class="emotion-bar-header"><span>Comfort Level</span><span id="comfort-pct" style="color:var(--green)">0%</span></div>
+          <div class="emotion-bar-track"><div class="emotion-bar-fill" id="comfort-bar" style="width:0%;background:var(--green);transition:width 1.2s ease"></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="ai-response" id="sit-response" style="min-height:60px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ EMOTION DETECTION (formerly "Voice Analysis") ════════════ -->
+<div class="page" id="page-emotion">
+  <div class="section-header">
+    <div>
+      <div class="section-title">💬 Emotion Detection</div>
+      <div class="section-sub">Text-based emotional analysis — describe how you feel</div>
+    </div>
+  </div>
+
+  <div class="model-banner">
+    <strong>What this module does:</strong> Uses NLP-based sentiment analysis (via Claude) on your written text to detect emotional states. This is <strong>text emotion detection, not voice analysis</strong>. A full voice implementation would use mic input + Librosa pitch/tone extraction + LSTM model (see roadmap).
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">🗣️ Express Yourself</div>
+      <div class="card-sub">Write exactly what's on your mind — be honest</div>
+      <textarea class="ai-input" rows="7" id="voice-input" placeholder="E.g. Tomorrow is my placement interview and I haven't prepared enough. Every time I think about walking into that room my mind goes blank. I keep imagining failing in front of everyone..."></textarea>
+      <div class="mt-16">
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="analyzeEmotion()">💬 Detect Emotion</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card mb-16">
+        <div class="card-title">📊 Emotion Scores</div>
+        <div class="card-sub">Detected from your text content and sentiment</div>
+
+        <div id="emotion-empty" class="empty-state">
+          <span class="empty-icon">💬</span>
+          <div class="empty-title">Awaiting input</div>
+          <div class="empty-sub">Write something and click Detect Emotion to see scores.</div>
+        </div>
+
+        <div id="emotion-result" style="display:none">
+          <div class="emotion-bar-wrap">
+            <div class="emotion-bar-header"><span>Fear</span><span id="v-fear" style="color:var(--red)">--</span></div>
+            <div class="emotion-bar-track"><div class="emotion-bar-fill" id="v-fear-bar" style="width:0%;background:var(--red);transition:width 1.2s"></div></div>
+          </div>
+          <div class="emotion-bar-wrap">
+            <div class="emotion-bar-header"><span>Stress / Anxiety</span><span id="v-stress" style="color:var(--orange)">--</span></div>
+            <div class="emotion-bar-track"><div class="emotion-bar-fill" id="v-stress-bar" style="width:0%;background:var(--orange);transition:width 1.2s"></div></div>
+          </div>
+          <div class="emotion-bar-wrap">
+            <div class="emotion-bar-header"><span>Confidence</span><span id="v-conf" style="color:var(--violet)">--</span></div>
+            <div class="emotion-bar-track"><div class="emotion-bar-fill" id="v-conf-bar" style="width:0%;background:var(--violet);transition:width 1.2s"></div></div>
+          </div>
+          <div class="emotion-bar-wrap">
+            <div class="emotion-bar-header"><span>Calm</span><span id="v-calm" style="color:var(--green)">--</span></div>
+            <div class="emotion-bar-track"><div class="emotion-bar-fill" id="v-calm-bar" style="width:0%;background:var(--green);transition:width 1.2s"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🤖 Emotional Insight</div>
+        <div class="ai-response" id="voice-response">Your emotional analysis and personalized guidance will appear here.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ FACIAL ANALYSIS ════════════ -->
+<div class="page" id="page-facial">
+  <div class="section-header">
+    <div>
+      <div class="section-title">📷 Facial Analysis</div>
+      <div class="section-sub">Use your webcam or upload a photo — or select an expression manually</div>
+    </div>
+  </div>
+
+  <div class="model-banner">
+    <strong>Prototype note:</strong> A production version uses OpenCV + CNN (trained on FER-2013 dataset) for real-time facial emotion classification. <strong>In this demo</strong>, you can use your webcam snapshot (analyzed by Claude Vision) or select an expression manually. Both generate real AI-driven wellness advice.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">📷 Capture or Select</div>
+      <div class="card-sub">Use webcam, upload photo, or pick manually</div>
+
+      <!-- Webcam section -->
+      <div style="margin-bottom:14px">
+        <video id="webcam-video" style="display:none;width:100%;height:180px;border-radius:9px;object-fit:cover;border:1px solid var(--border)" autoplay muted playsinline></video>
+        <canvas id="webcam-canvas" style="display:none;width:100%;height:180px;border-radius:9px;border:1px solid var(--border)"></canvas>
+        <div id="webcam-placeholder" class="webcam-placeholder">
+          <span style="font-size:32px">📷</span>
+          <span>Webcam not started</span>
+          <span style="font-size:11px">Click below to enable</span>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn btn-cyan" id="webcam-btn" onclick="startWebcam()" style="flex:1;justify-content:center">📷 Start Camera</button>
+        <button class="btn btn-outline" id="snap-btn" onclick="snapPhoto()" style="flex:1;justify-content:center" disabled>📸 Snap Photo</button>
+      </div>
+
+      <div class="divider" style="margin:10px 0"></div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Or select expression manually:</div>
+
+      <div class="env-grid" id="face-grid">
+        <div class="env-option" onclick="selectFace(this,'😊','Happy')"><span class="env-icon">😊</span>Happy</div>
+        <div class="env-option" onclick="selectFace(this,'😐','Neutral')"><span class="env-icon">😐</span>Neutral</div>
+        <div class="env-option" onclick="selectFace(this,'😰','Fearful')"><span class="env-icon">😰</span>Fearful</div>
+        <div class="env-option" onclick="selectFace(this,'😢','Sad')"><span class="env-icon">😢</span>Sad</div>
+        <div class="env-option" onclick="selectFace(this,'😤','Stressed')"><span class="env-icon">😤</span>Stressed</div>
+        <div class="env-option" onclick="selectFace(this,'😠','Angry')"><span class="env-icon">😠</span>Angry</div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="analyzeFace()">📷 Classify Emotion</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Facial Emotion Output</div>
+      <div class="card-sub">CNN-simulated classification + AI wellness advice</div>
+
+      <div id="face-empty" class="empty-state">
+        <span class="empty-icon">😶</span>
+        <div class="empty-title">No face analyzed yet</div>
+        <div class="empty-sub">Snap a photo or select an expression to receive analysis.</div>
+      </div>
+
+      <div id="face-result" style="display:none">
+        <div style="text-align:center;font-size:56px;margin-bottom:12px" id="face-emoji-display"></div>
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:14px;flex-wrap:wrap" id="face-chip-row"></div>
+        <div class="ai-response" id="face-response"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ EXPOSURE SIMULATOR ════════════ -->
+<div class="page" id="page-simulator">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🎭 Exposure Simulator</div>
+      <div class="section-sub">Practice high-pressure scenarios with AI coaching</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">⚙️ Choose Scenario</div>
+      <div class="card-sub">Select mode — then interact naturally with the AI</div>
+
+      <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:18px" id="sim-mode-wrap">
+        <div class="env-option" style="text-align:left;display:flex;align-items:center;gap:12px" onclick="selectSimMode(this,'interview')">
+          <span style="font-size:22px">💼</span>
+          <div><div style="font-size:13px;color:var(--white);font-weight:500">Placement Interview</div><div style="font-size:11px;color:var(--muted)">Technical + HR questions, real feedback</div></div>
+        </div>
+        <div class="env-option" style="text-align:left;display:flex;align-items:center;gap:12px" onclick="selectSimMode(this,'presentation')">
+          <span style="font-size:22px">🎤</span>
+          <div><div style="font-size:13px;color:var(--white);font-weight:500">Presentation to Audience</div><div style="font-size:11px;color:var(--muted)">Virtual audience reacts and prompts</div></div>
+        </div>
+        <div class="env-option" style="text-align:left;display:flex;align-items:center;gap:12px" onclick="selectSimMode(this,'gd')">
+          <span style="font-size:22px">💬</span>
+          <div><div style="font-size:13px;color:var(--white);font-weight:500">Group Discussion</div><div style="font-size:11px;color:var(--muted)">Debate & communication skills</div></div>
+        </div>
+        <div class="env-option" style="text-align:left;display:flex;align-items:center;gap:12px" onclick="selectSimMode(this,'viva')">
+          <span style="font-size:22px">📋</span>
+          <div><div style="font-size:13px;color:var(--white);font-weight:500">Viva / Oral Exam</div><div style="font-size:11px;color:var(--muted)">Academic exam question simulation</div></div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="startSim()">▶ Start Session</button>
+    </div>
+
+    <div class="card" style="display:flex;flex-direction:column">
+      <div class="card-title">🤖 Session</div>
+      <div class="card-sub" id="sim-sub">Choose a mode and start</div>
+      <div id="sim-chat" style="flex:1;overflow-y:auto;max-height:330px;margin-bottom:14px">
+        <div class="empty-state">
+          <span class="empty-icon">🎭</span>
+          <div class="empty-title">Session not started</div>
+          <div class="empty-sub">Pick a scenario and click Start Session to begin practicing.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <textarea class="ai-input" rows="2" id="sim-input" placeholder="Type your response... (Enter to send)" style="flex:1;resize:none"></textarea>
+        <button class="btn btn-primary" style="align-self:flex-end;padding:9px 14px" onclick="sendSimResponse()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MUSIC ════════════ -->
+<div class="page" id="page-music">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🎵 Emotion Music Engine</div>
+      <div class="section-sub">Music recommendations tied to your actual emotional state</div>
+    </div>
+  </div>
+
+  <div class="model-banner">
+    <strong>How this works:</strong> Your detected emotion from FearMap or Emotion Detection is pre-filled here. AI picks a mood direction and each track is <strong>original audio generated live in your browser</strong> (no licensed songs) — tap any card to play or pause it.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">😌 Your Emotional State</div>
+      <div class="card-sub">Pre-filled from latest analysis — adjust as needed</div>
+
+      <div id="music-source-info" style="padding:10px 12px;border-radius:8px;background:rgba(92,184,92,.06);border:1px solid rgba(92,184,92,.18);font-size:12px;color:var(--muted);margin-bottom:16px">
+        📊 <span id="music-source-label">No analysis run yet — adjusting sliders manually.</span>
+      </div>
+
+      <div class="range-wrap">
+        <div class="range-label"><span>Stress Level</span><span id="music-stress-val" style="color:var(--red)">50%</span></div>
+        <input type="range" min="0" max="100" value="50" id="music-stress" oninput="document.getElementById('music-stress-val').textContent=this.value+'%'">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Energy Level</span><span id="music-energy-val" style="color:var(--green)">50%</span></div>
+        <input type="range" min="0" max="100" value="50" id="music-energy" oninput="document.getElementById('music-energy-val').textContent=this.value+'%'">
+      </div>
+      <div class="range-wrap">
+        <div class="range-label"><span>Focus Need</span><span id="music-focus-val" style="color:var(--cyan-text)">50%</span></div>
+        <input type="range" min="0" max="100" value="50" id="music-focus" oninput="document.getElementById('music-focus-val').textContent=this.value+'%'">
+      </div>
+      <textarea class="ai-input" rows="2" id="music-context" placeholder="What are you doing? (studying, coding, winding down...)" style="margin-bottom:14px"></textarea>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="getMusic()">🎵 Generate Playlist</button>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="card-title">🎶 Recommended Tracks</div>
+        <button class="btn btn-outline" style="padding:4px 10px;font-size:11px" onclick="stopMusic()">⏹ Stop</button>
+      </div>
+      <div class="card-sub" id="music-mood-label">Set your state and generate</div>
+      <div id="music-playlist">
+        <div class="empty-state">
+          <span class="empty-icon">🎵</span>
+          <div class="empty-title">No playlist yet</div>
+          <div class="empty-sub">Configure your emotional state and click Generate Playlist.</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="ai-response" id="music-response" style="min-height:50px;font-size:12px">AI will explain the neurological reason each track type helps your current state.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ RECOMMENDATIONS ════════════ -->
+<div class="page" id="page-reco">
+  <div class="section-header">
+    <div>
+      <div class="section-title">💡 Personalized Recommendations</div>
+      <div class="section-sub">Action plans generated from your real emotion profile</div>
+    </div>
+  </div>
+
+  <div class="card mb-20">
+    <div class="card-title">🎯 Your Challenge</div>
+    <div class="card-sub">Be specific — the more detail, the more targeted the plan</div>
+    <div style="display:flex;gap:10px">
+      <textarea class="ai-input" rows="3" id="reco-input" placeholder="E.g. I have a viva exam tomorrow. My fear score was 72% from FearMap. I freeze when asked unexpected questions and my mind goes blank under pressure..." style="flex:1;resize:none"></textarea>
+      <button class="btn btn-primary" style="align-self:flex-end;white-space:nowrap" onclick="getReco()">Get Plan</button>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">📋 Personalized Action Plan</div>
+      <div class="ai-response" id="reco-response" style="min-height:180px">Describe your challenge above to get a specific, timed action plan.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚡ Always-Available Toolkit</div>
+      <div class="card-sub">Proven techniques — no AI needed</div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div style="padding:11px 13px;border-radius:8px;background:rgba(159,211,168,.06);border:1px solid rgba(159,211,168,.18);font-size:12.5px">
+          <div style="color:var(--cyan-text);margin-bottom:3px;font-weight:500">🌬️ Box Breathing (4-4-4-4)</div>
+          Inhale 4s → Hold 4s → Exhale 4s → Hold 4s. Lowers cortisol within 90 seconds.
+        </div>
+        <div style="padding:11px 13px;border-radius:8px;background:rgba(111,168,255,.06);border:1px solid rgba(111,168,255,.18);font-size:12.5px">
+          <div style="color:var(--lavender-text);margin-bottom:3px;font-weight:500">🍅 Pomodoro (25+5)</div>
+          25 min focused work, 5 min break. Prevents cognitive overload during revision.
+        </div>
+        <div style="padding:11px 13px;border-radius:8px;background:rgba(92,184,92,.06);border:1px solid rgba(92,184,92,.18);font-size:12.5px">
+          <div style="color:var(--green);margin-bottom:3px;font-weight:500">💪 Power Pose — 2 min</div>
+          Expand your posture before high-stakes events. Shown to increase felt confidence.
+        </div>
+        <div style="padding:11px 13px;border-radius:8px;background:rgba(246,196,83,.06);border:1px solid rgba(246,196,83,.18);font-size:12.5px">
+          <div style="color:var(--orange);margin-bottom:3px;font-weight:500">🧊 5-4-3-2-1 Grounding</div>
+          5 things you see → 4 touch → 3 hear → 2 smell → 1 taste. Stops panic spirals.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MOOD JOURNAL ════════════ -->
+<div class="page" id="page-journal">
+  <div class="section-header">
+    <div>
+      <div class="section-title">📓 Mood Journal</div>
+      <div class="section-sub">Track how you feel over time — your entries stay in this session</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">✍️ New Entry</div>
+      <div class="card-sub">Write freely — AI optionally reflects on your entry</div>
+
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap" id="mood-selector">
+        <button class="btn btn-outline" onclick="selectMood(this,'😊','Happy')" style="padding:6px 12px;font-size:13px">😊 Happy</button>
+        <button class="btn btn-outline" onclick="selectMood(this,'😐','Neutral')" style="padding:6px 12px;font-size:13px">😐 Neutral</button>
+        <button class="btn btn-outline" onclick="selectMood(this,'😰','Anxious')" style="padding:6px 12px;font-size:13px">😰 Anxious</button>
+        <button class="btn btn-outline" onclick="selectMood(this,'😢','Sad')" style="padding:6px 12px;font-size:13px">😢 Sad</button>
+        <button class="btn btn-outline" onclick="selectMood(this,'😤','Stressed')" style="padding:6px 12px;font-size:13px">😤 Stressed</button>
+        <button class="btn btn-outline" onclick="selectMood(this,'💪','Confident')" style="padding:6px 12px;font-size:13px">💪 Confident</button>
+      </div>
+
+      <textarea class="ai-input" rows="5" id="journal-input" placeholder="Today I felt... What happened? What helped or made it worse?"></textarea>
+
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="saveJournal()">💾 Save Entry</button>
+        <button class="btn btn-cyan" onclick="journalAI()">🤖 AI Reflection</button>
+      </div>
+
+      <div class="ai-response mt-12" id="journal-ai" style="display:none;font-size:12.5px"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📖 Past Entries</div>
+      <div class="card-sub">This session only — entries clear on refresh</div>
+      <div id="journal-list">
+        <div class="empty-state">
+          <span class="empty-icon">📓</span>
+          <div class="empty-title">No entries yet</div>
+          <div class="empty-sub">Write your first mood entry to start tracking how you feel over time.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ DAILY GOALS ════════════ -->
+<div class="page" id="page-goals">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🎯 Daily Goals</div>
+      <div class="section-sub">Habit-building targets for mental wellness</div>
+    </div>
+    <button class="btn btn-outline" onclick="resetGoals()" style="font-size:12px">Reset Day</button>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Today's Wellness Goals</div>
+      <div class="card-sub">Tap to mark complete — builds streaks</div>
+      <div id="goals-list"></div>
+      <div class="divider"></div>
+      <div style="font-size:13px;color:var(--muted)" id="goals-progress-text">0 of 6 completed</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">➕ Add Custom Goal</div>
+      <div class="card-sub">Set your own wellness target for today</div>
+      <textarea class="ai-input" rows="2" id="custom-goal-input" placeholder="e.g. Meditate for 10 minutes before bed..." style="margin-bottom:12px"></textarea>
+      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="addCustomGoal()">Add Goal</button>
+      <div class="divider"></div>
+      <div class="card-title" style="margin-bottom:10px">💡 AI Goal Suggestion</div>
+      <button class="btn btn-cyan" style="width:100%;justify-content:center;margin-bottom:12px" onclick="suggestGoal()">Get Personalized Suggestion</button>
+      <div class="ai-response" id="goal-suggestion" style="min-height:50px;font-size:12.5px">AI will suggest a goal based on your emotional state and fear profile.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ ANALYTICS ════════════ -->
+<div class="page" id="page-analytics">
+  <div class="section-header">
+    <div>
+      <div class="section-title">📊 My Progress</div>
+      <div class="section-sub">Session data + illustrative 4-week trend</div>
+    </div>
+  </div>
+
+  <div class="model-banner">
+    <strong>Data source:</strong> Rings and bars below reflect your <strong>actual session analyses</strong> when available. The weekly table is illustrative sample data to demonstrate what long-term tracking looks like. In a production app this would pull from a database.
+  </div>
+
+  <div class="grid-3 mb-20" id="analytics-rings">
+    <div class="card" style="text-align:center">
+      <div class="card-title" style="justify-content:center">Confidence</div>
+      <div class="conf-ring-wrap">
+        <div class="conf-ring">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(45,55,72,.06)" stroke-width="9"/>
+            <circle cx="65" cy="65" r="54" fill="none" stroke="url(#cg1)" stroke-width="9" stroke-dasharray="339" id="ring-conf-circle" stroke-dashoffset="339" stroke-linecap="round"/>
+            <defs><linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6FA8FF"/><stop offset="100%" stop-color="#9FD3A8"/></linearGradient></defs>
+          </svg>
+          <div class="conf-ring-text">
+            <div class="conf-ring-val" id="ring-conf-val" style="color:var(--violet)">--</div>
+            <div class="conf-ring-label">Score</div>
+          </div>
+        </div>
+      </div>
+      <div id="ring-conf-note" style="font-size:11.5px;color:var(--muted)">Run FearMap first</div>
+    </div>
+
+    <div class="card" style="text-align:center">
+      <div class="card-title" style="justify-content:center">Stress Level</div>
+      <div class="conf-ring-wrap">
+        <div class="conf-ring">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(45,55,72,.06)" stroke-width="9"/>
+            <circle cx="65" cy="65" r="54" fill="none" stroke="#F6C453" stroke-width="9" stroke-dasharray="339" id="ring-stress-circle" stroke-dashoffset="339" stroke-linecap="round"/>
+          </svg>
+          <div class="conf-ring-text">
+            <div class="conf-ring-val" id="ring-stress-val" style="color:var(--orange)">--</div>
+            <div class="conf-ring-label">Avg Stress</div>
+          </div>
+        </div>
+      </div>
+      <div id="ring-stress-note" style="font-size:11.5px;color:var(--muted)">Run FearMap first</div>
+    </div>
+
+    <div class="card" style="text-align:center">
+      <div class="card-title" style="justify-content:center">Analyses Done</div>
+      <div class="conf-ring-wrap">
+        <div class="conf-ring">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <circle cx="65" cy="65" r="54" fill="none" stroke="rgba(45,55,72,.06)" stroke-width="9"/>
+            <circle cx="65" cy="65" r="54" fill="none" stroke="#5CB85C" stroke-width="9" stroke-dasharray="339" id="ring-sessions-circle" stroke-dashoffset="305" stroke-linecap="round"/>
+          </svg>
+          <div class="conf-ring-text">
+            <div class="conf-ring-val" id="ring-sessions-val" style="color:var(--green)">0</div>
+            <div class="conf-ring-label">This Session</div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--muted)">Grows as you use modules</div>
+    </div>
+  </div>
+
+  <div class="card mb-20">
+    <div class="card-title">📈 Sample 4-Week Trend (Illustrative)</div>
+    <div class="card-sub">What consistent MindSphere usage could look like over a month</div>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border)">
+            <th style="text-align:left;padding:9px 11px;color:var(--muted);font-weight:500">Week</th>
+            <th style="text-align:right;padding:9px 11px;color:var(--muted);font-weight:500">Confidence</th>
+            <th style="text-align:right;padding:9px 11px;color:var(--muted);font-weight:500">Avg Stress</th>
+            <th style="text-align:right;padding:9px 11px;color:var(--muted);font-weight:500">Fear Episodes</th>
+            <th style="text-align:right;padding:9px 11px;color:var(--muted);font-weight:500">Sessions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(45,55,72,.04)">
+            <td style="padding:9px 11px">Week 1</td>
+            <td style="text-align:right;padding:9px 11px;color:var(--red)">48%</td>
+            <td style="text-align:right;padding:9px 11px;color:var(--red)">55%</td>
+            <td style="text-align:right;padding:9px 11px">9</td>
+            <td style="text-align:right;padding:9px 11px">2</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(45,55,72,.04)">
+            <td style="padding:9px 11px">Week 2</td>
+            <td style="text-align:right;padding:9px 11px;color:var(--orange)">61%</td>
+            <td style="text-align:right;padding:9px 11px;color:var(--orange)">44%</td>
+            <td style="text-align:right;padding:9px 11px">6</td>
+            <td style="text-align:right;padding:9px 11px">5</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(45,55,72,.04)">
+            <td style="padding:9px 11px">Week 3</td>
+            <td style="text-align:right;padding:9px 11px;color:var(--cyan-text)">70%</td>
+            <td style="text-align:right;padding:9px 11px;color:var(--cyan-text)">39%</td>
+            <td style="text-align:right;padding:9px 11px">5</td>
+            <td style="text-align:right;padding:9px 11px">9</td>
+          </tr>
+          <tr>
+            <td style="padding:9px 11px">Week 4</td>
+            <td style="text-align:right;padding:9px 11px;color:var(--green);font-weight:600">76%</td>
+            <td style="text-align:right;padding:9px 11px;color:var(--green);font-weight:600">34%</td>
+            <td style="text-align:right;padding:9px 11px;font-weight:600">3</td>
+            <td style="text-align:right;padding:9px 11px;font-weight:600">12</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🗓️ Fear Trigger Heatmap (Illustrative)</div>
+    <div class="card-sub">Shows what 28-day fear intensity tracking would look like — darker = higher stress</div>
+    <div style="display:flex;gap:18px;margin-bottom:10px">
+      <span style="font-size:10px;color:var(--muted)">Sun</span><span style="font-size:10px;color:var(--muted)">Mon</span>
+      <span style="font-size:10px;color:var(--muted)">Tue</span><span style="font-size:10px;color:var(--muted)">Wed</span>
+      <span style="font-size:10px;color:var(--muted)">Thu</span><span style="font-size:10px;color:var(--muted)">Fri</span>
+      <span style="font-size:10px;color:var(--muted)">Sat</span>
+    </div>
+    <div class="heatmap" id="heatmap"></div>
+  </div>
+</div>
+
+<!-- ════════════ SUPPORT ════════════ -->
+<div class="page" id="page-support">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🆘 Get Support</div>
+      <div class="section-sub">You are not alone — real help is available</div>
+    </div>
+  </div>
+
+  <div style="padding:20px;border-radius:12px;background:rgba(242,139,130,.07);border:1px solid rgba(242,139,130,.25);margin-bottom:24px">
+    <div style="font-size:16px;font-weight:600;margin-bottom:6px;color:var(--red)">🚨 If you are in crisis right now</div>
+    <div style="font-size:13.5px;line-height:1.6;color:var(--white)">
+      Please reach out to a real person immediately. MindSphere is a support tool — it does not replace professional mental health care.
+    </div>
+  </div>
+
+  <div class="grid-2 mb-20">
+    <div class="support-card" style="background:rgba(92,184,92,.06);border:1px solid rgba(92,184,92,.22)">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--green)">📞 iCall (India)</div>
+      <div style="font-size:13px;line-height:1.6;color:var(--white)">
+        Psychosocial helpline for students and young adults.<br>
+        <strong>9152987821</strong> · Mon–Sat, 8am–10pm<br>
+        <span style="font-size:11px;color:var(--muted)">icallhelpline.org</span>
+      </div>
+    </div>
+    <div class="support-card" style="background:rgba(159,211,168,.06);border:1px solid rgba(159,211,168,.22)">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--cyan-text)">📞 Vandrevala Foundation</div>
+      <div style="font-size:13px;line-height:1.6;color:var(--white)">
+        24/7 mental health helpline, India.<br>
+        <strong>1860-2662-345</strong> · Free, confidential<br>
+        <span style="font-size:11px;color:var(--muted)">vandrevalafoundation.com</span>
+      </div>
+    </div>
+    <div class="support-card" style="background:rgba(111,168,255,.06);border:1px solid rgba(111,168,255,.22)">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--lavender-text)">💬 Talk to Someone You Trust</div>
+      <div style="font-size:13px;line-height:1.6;color:var(--white)">
+        A parent, friend, teacher, or college counselor. Saying "I'm struggling" out loud is the hardest and most important step.
+      </div>
+    </div>
+    <div class="support-card" style="background:rgba(246,196,83,.06);border:1px solid rgba(246,196,83,.22)">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--orange)">🏥 College Counseling</div>
+      <div style="font-size:13px;line-height:1.6;color:var(--white)">
+        Most colleges offer free counseling sessions. Visit your Student Welfare office — it is confidential and there to help you.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🤖 Talk to MindSphere</div>
+    <div class="card-sub">Not a replacement for professional help — but we're here to listen</div>
+    <textarea class="ai-input" rows="3" id="support-input" placeholder="What's going on? You can share anything..." style="margin-bottom:12px"></textarea>
+    <button class="btn btn-primary" onclick="supportChat()">Send</button>
+    <div class="ai-response mt-12" id="support-response" style="display:none"></div>
+  </div>
+
+  <!-- Roadmap -->
+  <div class="card mt-12" style="margin-top:16px">
+    <div class="card-title">🛣️ Product Roadmap</div>
+    <div class="card-sub">Features planned for future versions</div>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-radius:8px;background:rgba(45,55,72,.02);border:1px solid var(--border);font-size:13px">
+        <span>⌚ Smartwatch / heart rate integration</span><span class="chip chip-gray">Planned</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-radius:8px;background:rgba(45,55,72,.02);border:1px solid var(--border);font-size:13px">
+        <span>🎙️ Real microphone voice analysis (Librosa + LSTM)</span><span class="chip chip-gray">Planned</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-radius:8px;background:rgba(45,55,72,.02);border:1px solid var(--border);font-size:13px">
+        <span>📷 Live webcam CNN emotion classification (FER-2013)</span><span class="chip chip-gray">Planned</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-radius:8px;background:rgba(45,55,72,.02);border:1px solid var(--border);font-size:13px">
+        <span>📍 GPS-based automatic situation detection</span><span class="chip chip-gray">Planned</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 13px;border-radius:8px;background:rgba(45,55,72,.02);border:1px solid var(--border);font-size:13px">
+        <span>🌐 Multilingual support (Hindi, Tamil, Bengali)</span><span class="chip chip-gray">Planned</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ CALM ZONE ════════════ -->
+<div class="page" id="page-calmzone">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🌿 Calm Zone</div>
+      <div class="section-sub">No scores, no timers, no failing — just somewhere quiet to put your hands while your mind settles</div>
+    </div>
+  </div>
+
+  <div class="cz-grid" id="cz-hub-grid">
+    <div class="cz-card" onclick="czShow('bubble')">
+      <div class="cz-card-icon">🫧</div>
+      <div class="cz-card-name">Bubble World</div>
+      <div class="cz-card-desc">Pop floating bubbles. Golden ones release butterflies.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('gravity')">
+      <div class="cz-card-icon">🌌</div>
+      <div class="cz-card-name">Gravity Sandbox</div>
+      <div class="cz-card-desc">Drop stars and planets, watch real gravity pull them into orbit.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('light')">
+      <div class="cz-card-icon">✨</div>
+      <div class="cz-card-name">Light Painter</div>
+      <div class="cz-card-desc">A dark canvas. Every movement leaves a glowing, fading trail.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('sand')">
+      <div class="cz-card-icon">🏖️</div>
+      <div class="cz-card-name">Sand Art Studio</div>
+      <div class="cz-card-desc">Pour colorful sand into layers. Watch it settle with gentle physics.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('magnet')">
+      <div class="cz-card-icon">🧲</div>
+      <div class="cz-card-name">Magnetic Balls</div>
+      <div class="cz-card-desc">Glowing orbs follow your touch — spirals, waves, chain reactions.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('eco')">
+      <div class="cz-card-icon">🌱</div>
+      <div class="cz-card-name">Tiny Ecosystem</div>
+      <div class="cz-card-desc">Plant trees, add rivers and creatures. Watch your world grow on its own.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('popit')">
+      <div class="cz-card-icon">🫙</div>
+      <div class="cz-card-name">Pop It</div>
+      <div class="cz-card-desc">Tap through a grid of poppable bumps. Clear it, then refill and go again.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('bubblewrap')">
+      <div class="cz-card-icon">🎁</div>
+      <div class="cz-card-name">Bubble Wrap</div>
+      <div class="cz-card-desc">A full sheet of plastic bubbles. Satisfying pops, one at a time.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('spinner')">
+      <div class="cz-card-icon">🌀</div>
+      <div class="cz-card-name">Fidget Spinner</div>
+      <div class="cz-card-desc">Flick it and watch it spin down with real momentum and friction.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('stressball')">
+      <div class="cz-card-icon">🟣</div>
+      <div class="cz-card-name">Stress Ball</div>
+      <div class="cz-card-desc">Press and hold to squish it. Let go and it bounces back into shape.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('newton')">
+      <div class="cz-card-icon">⚫</div>
+      <div class="cz-card-name">Newton's Cradle</div>
+      <div class="cz-card-desc">Pull a ball back and release — watch the momentum click through.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('rake')">
+      <div class="cz-card-icon">🪨</div>
+      <div class="cz-card-name">Zen Rake Garden</div>
+      <div class="cz-card-desc">Drag to rake smooth, meditative lines through sand around stones.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('chimes')">
+      <div class="cz-card-icon">🎐</div>
+      <div class="cz-card-name">Wind Chimes</div>
+      <div class="cz-card-desc">Brush across hanging chimes — each one rings its own gentle tone.</div>
+    </div>
+    <div class="cz-card" onclick="czShow('balloons')">
+      <div class="cz-card-icon">🎈</div>
+      <div class="cz-card-name">Balloon Float</div>
+      <div class="cz-card-desc">Balloons drift upward — tap to pop them before they float away.</div>
+    </div>
+  </div>
+
+  <!-- BUBBLE WORLD -->
+  <div class="cz-panel" id="cz-bubble">
+    <div class="cz-panel-bar">
+      <div>
+        <div class="card-title">🫧 Bubble World</div>
+        <div class="card-sub">Pop any bubble — no timer, no score, no way to lose</div>
+      </div>
+      <div class="cz-panel-actions">
+        <span class="chip chip-violet">💥 Popped: <span id="bw-popped">0</span></span>
+        <span class="chip chip-gray">🦋 Butterflies: <span id="bw-butterflies">0</span></span>
+        <button class="btn btn-outline" onclick="bwClear()">Refresh</button>
+        <button class="btn btn-outline" onclick="czShow('hub')">← Back</button>
+      </div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="bubbleCanvas"></canvas></div>
+  </div>
+
+  <!-- GRAVITY SANDBOX -->
+  <div class="cz-panel" id="cz-gravity">
+    <div class="cz-panel-bar">
+      <div>
+        <div class="card-title">🌌 Gravity Sandbox</div>
+        <div class="card-sub">Click to place a body, drag to give it motion</div>
+      </div>
+      <div class="cz-panel-actions">
+        <span class="chip chip-violet">⭐ Bodies: <span id="gv-count">0</span></span>
+        <button class="btn btn-outline" onclick="gvClear()">Clear Space</button>
+        <button class="btn btn-outline" onclick="czShow('hub')">← Back</button>
+      </div>
+    </div>
+    <div class="cz-tools">
+      <div class="cz-tool gv-tool active" onclick="gvSetTool(this,'star')">⭐ Small Star</div>
+      <div class="cz-tool gv-tool" onclick="gvSetTool(this,'planet')">🪐 Planet</div>
+      <div class="cz-tool gv-tool" onclick="gvSetTool(this,'sun')">☀️ Massive Sun</div>
+      <div class="cz-tool gv-tool" onclick="gvSetTool(this,'blackhole')">⚫ Black Hole</div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="gravityCanvas"></canvas></div>
+  </div>
+
+  <!-- LIGHT PAINTER -->
+  <div class="cz-panel" id="cz-light">
+    <div class="cz-panel-bar">
+      <div>
+        <div class="card-title">✨ Light Painter</div>
+        <div class="card-sub">Move your cursor across the dark canvas — trails glow and fade</div>
+      </div>
+      <div class="cz-panel-actions">
+        <button class="btn btn-outline" onclick="lpClear()">Clear Sky</button>
+        <button class="btn btn-outline" onclick="czShow('hub')">← Back</button>
+      </div>
+    </div>
+    <div class="cz-tools">
+      <div class="cz-tool lp-tool active" onclick="lpSetMode(this,'aurora')">🌈 Aurora</div>
+      <div class="cz-tool lp-tool" onclick="lpSetMode(this,'galaxy')">🌌 Galaxy</div>
+      <div class="cz-tool lp-tool" onclick="lpSetMode(this,'ribbon')">🎀 Ribbon</div>
+      <div class="cz-tool lp-tool" onclick="lpSetMode(this,'sparkle')">✨ Sparkle</div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="lpCanvas" style="background:#0A0E1A;cursor:crosshair"></canvas></div>
+  </div>
+
+  <!-- SAND ART STUDIO -->
+  <div class="cz-panel" id="cz-sand">
+    <div class="cz-panel-bar">
+      <div>
+        <div class="card-title">🏖️ Sand Art Studio</div>
+        <div class="card-sub">Pour colorful sand from the top — layers settle and blend naturally</div>
+      </div>
+      <div class="cz-panel-actions">
+        <button class="btn btn-outline" onclick="saClear()">Empty Bottle</button>
+        <button class="btn btn-outline" onclick="czShow('hub')">← Back</button>
+      </div>
+    </div>
+    <div class="cz-tools" id="sa-colors">
+      <div class="cz-tool sa-color active" style="background:#F28B82;color:#fff" onclick="saSetColor(this,'#F28B82')">Coral</div>
+      <div class="cz-tool sa-color" style="background:#F6C453;color:#fff" onclick="saSetColor(this,'#F6C453')">Gold</div>
+      <div class="cz-tool sa-color" style="background:#9FD3A8;color:#fff" onclick="saSetColor(this,'#9FD3A8')">Sage</div>
+      <div class="cz-tool sa-color" style="background:#6FA8FF;color:#fff" onclick="saSetColor(this,'#6FA8FF')">Sky</div>
+      <div class="cz-tool sa-color" style="background:#CDB4DB;color:#fff" onclick="saSetColor(this,'#CDB4DB')">Lilac</div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="sandCanvas"></canvas></div>
+  </div>
+
+  <!-- MAGNETIC BALLS -->
+  <div class="cz-panel" id="cz-magnet">
+    <div class="cz-panel-bar">
+      <div>
+        <div class="card-title">🧲 Magnetic Balls</div>
+        <div class="card-sub">Move your cursor — nearby orbs are pulled into smooth, glowing motion</div>
+      </div>
+      <div class="cz-panel-actions">
+        <button class="btn btn-outline" onclick="mbScatter()">Scatter</button>
+        <button class="btn btn-outline" onclick="czShow('hub')">← Back</button>
+      </div>
+    </div>
+    <div class="cz-tools">
+      <div class="cz-tool mb-mode active" onclick="mbSetMode(this,'attract')">🧲 Attract</div>
+      <div class="cz-tool mb-mode" onclick="mbSetMode(this,'swirl')">🌀 Swirl</div>
+      <div class="cz-tool mb-mode" onclick="mbSetMode(this,'repel')">💨 Repel</div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="magnetCanvas"></canvas></div>
+  </div>
+
+  <!-- TINY ECOSYSTEM -->
+  <div class="cz-panel" id="cz-eco">
+    <div class="cz-panel-bar">
+      <div>
+        <div class="card-title">🌱 Tiny Ecosystem</div>
+        <div class="card-sub">Tap to plant. Your little world grows and evolves on its own over time</div>
+      </div>
+      <div class="cz-panel-actions">
+        <span class="chip chip-secondary">🌳 Life: <span id="eco-count">0</span></span>
+        <button class="btn btn-outline" onclick="ecoClear()">New World</button>
+        <button class="btn btn-outline" onclick="czShow('hub')">← Back</button>
+      </div>
+    </div>
+    <div class="cz-tools">
+      <div class="cz-tool eco-tool active" onclick="ecoSetTool(this,'tree')">🌳 Tree</div>
+      <div class="cz-tool eco-tool" onclick="ecoSetTool(this,'flower')">🌸 Flower</div>
+      <div class="cz-tool eco-tool" onclick="ecoSetTool(this,'water')">💧 River</div>
+      <div class="cz-tool eco-tool" onclick="ecoSetTool(this,'creature')">🦋 Creature</div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="ecoCanvas"></canvas></div>
+  </div>
+
+  <!-- POP IT -->
+  <div class="cz-panel" id="cz-popit">
+    <div class="cz-panel-bar">
+      <div><div class="card-title">🫙 Pop It</div><div class="card-sub">Work down the grid — refills once you clear it</div></div>
+      <div class="cz-panel-actions"><span class="chip chip-violet">Popped: <span id="pi-popped">0</span>/<span id="pi-total">96</span></span><button class="btn btn-outline" onclick="piReset()">Refill</button><button class="btn btn-outline" onclick="czShow('hub')">← Back</button></div>
+    </div>
+    <div id="pi-grid" style="display:grid;grid-template-columns:repeat(12,1fr);gap:6px;padding:18px;border-radius:12px;border:1px solid var(--border);background:var(--navy3)"></div>
+  </div>
+
+  <!-- BUBBLE WRAP -->
+  <div class="cz-panel" id="cz-bubblewrap">
+    <div class="cz-panel-bar">
+      <div><div class="card-title">🎁 Bubble Wrap</div><div class="card-sub">A full sheet — pop every one, then get a fresh sheet</div></div>
+      <div class="cz-panel-actions"><span class="chip chip-violet">Left: <span id="bwr-left">80</span></span><button class="btn btn-outline" onclick="bwrReset()">New Sheet</button><button class="btn btn-outline" onclick="czShow('hub')">← Back</button></div>
+    </div>
+    <div id="bwr-grid" style="display:grid;grid-template-columns:repeat(10,1fr);gap:5px;padding:18px;border-radius:12px;border:1px solid var(--border);background:var(--navy3)"></div>
+  </div>
+
+  <!-- FIDGET SPINNER -->
+  <div class="cz-panel" id="cz-spinner">
+    <div class="cz-panel-bar">
+      <div><div class="card-title">🌀 Fidget Spinner</div><div class="card-sub">Flick it with a drag — watch it spin down naturally</div></div>
+      <div class="cz-panel-actions"><button class="btn btn-outline" onclick="czShow('hub')">← Back</button></div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="spinnerCanvas"></canvas></div>
+  </div>
+
+  <!-- STRESS BALL -->
+  <div class="cz-panel" id="cz-stressball">
+    <div class="cz-panel-bar">
+      <div><div class="card-title">🟣 Stress Ball</div><div class="card-sub">Press and hold — it squishes, release to bounce back</div></div>
+      <div class="cz-panel-actions"><span class="chip chip-violet">Squeezes: <span id="sb-count">0</span></span><button class="btn btn-outline" onclick="czShow('hub')">← Back</button></div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="stressballCanvas"></canvas></div>
+  </div>
+
+  <!-- NEWTON'S CRADLE -->
+  <div class="cz-panel" id="cz-newton">
+    <div class="cz-panel-bar">
+      <div><div class="card-title">⚫ Newton's Cradle</div><div class="card-sub">Pull an end ball and let go</div></div>
+      <div class="cz-panel-actions"><button class="btn btn-outline" onclick="ncReset()">Reset</button><button class="btn btn-outline" onclick="czShow('hub')">← Back</button></div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="newtonCanvas"></canvas></div>
+  </div>
+
+  <!-- ZEN RAKE GARDEN -->
+  <div class="cz-panel" id="cz-rake">
+    <div class="cz-panel-bar">
+      <div><div class="card-title">🪨 Zen Rake Garden</div><div class="card-sub">Drag across the sand to rake smooth lines around the stones</div></div>
+      <div class="cz-panel-actions"><button class="btn btn-outline" onclick="zrClear()">Smooth Sand</button><button class="btn btn-outline" onclick="czShow('hub')">← Back</button></div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="rakeCanvas"></canvas></div>
+  </div>
+
+  <!-- WIND CHIMES -->
+  <div class="cz-panel" id="cz-chimes">
+    <div class="cz-panel-bar">
+      <div><div class="card-title">🎐 Wind Chimes</div><div class="card-sub">Tap or drag across the chimes — each one rings a different tone</div></div>
+      <div class="cz-panel-actions"><button class="btn btn-outline" onclick="czShow('hub')">← Back</button></div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="chimesCanvas"></canvas></div>
+  </div>
+
+  <!-- BALLOON POP -->
+  <div class="cz-panel" id="cz-balloons">
+    <div class="cz-panel-bar">
+      <div><div class="card-title">🎈 Balloon Float</div><div class="card-sub">Tap floating balloons to pop them — new ones keep drifting up</div></div>
+      <div class="cz-panel-actions"><span class="chip chip-violet">Popped: <span id="bl-popped">0</span></span><button class="btn btn-outline" onclick="czShow('hub')">← Back</button></div>
+    </div>
+    <div class="cz-canvas-wrap"><canvas id="balloonCanvas"></canvas></div>
+  </div>
+</div>
+
+<!-- ════════════ ANONYMOUS VENT SPACE ════════════ -->
+<div class="page" id="page-vent">
+  <div class="section-header">
+    <div>
+      <div class="section-title">💭 Anonymous Vent Space</div>
+      <div class="section-sub">A safe, judgment-free place to let it out</div>
+    </div>
+  </div>
+
+  <div style="padding:14px 18px;border-radius:12px;background:rgba(111,168,255,.08);border:1px solid rgba(111,168,255,.22);margin-bottom:12px;font-size:13px;display:flex;align-items:center;gap:10px">
+    🕶️ <span>You are anonymous here as <strong id="vent-my-id" style="color:var(--violet2)"></strong>. Be kind to others.</span>
+  </div>
+  <div style="padding:10px 16px;border-radius:10px;background:rgba(148,163,184,.08);border:1px solid var(--border);margin-bottom:20px;font-size:11.5px;color:var(--muted);line-height:1.5">
+    ℹ️ This is a working prototype, not a live network yet — the 3 starter posts below are examples to show how the feed looks, not real people. Posts, reactions, and comments you make are real and interactive, but they're only stored in this browser tab for this session (nothing is saved to a server or shared with other users). A real shared community would need a backend to connect everyone.
+  </div>
+
+  <div class="card mb-20">
+    <div class="card-title">✍️ Share what's on your mind</div>
+    <div class="card-sub">Posted under your anonymous name — no real identity shown, ever</div>
+    <select id="vent-category" class="ai-input" style="margin-bottom:10px;cursor:pointer">
+      <option value="Stress">Stress</option>
+      <option value="Anxiety">Anxiety</option>
+      <option value="Relationships">Relationships</option>
+      <option value="Career">Career</option>
+      <option value="Studies">Studies</option>
+      <option value="Family">Family</option>
+    </select>
+    <textarea class="ai-input" rows="3" id="vent-text" placeholder="What's weighing on you today? No one here knows it's you..."></textarea>
+    <div style="display:flex;align-items:center;gap:8px;margin:10px 0">
+      <input type="checkbox" id="vent-sensitive" style="width:16px;height:16px">
+      <label for="vent-sensitive" style="font-size:12px;color:var(--muted)">Mark as sensitive (self-harm, abuse, etc.) — adds a content warning</label>
+    </div>
+    <button class="btn btn-primary" onclick="postVent()">Post Anonymously</button>
+  </div>
+
+  <div id="vent-crisis-note" style="display:none;margin-bottom:18px"></div>
+
+  <div class="section-header" style="margin-bottom:12px">
+    <div class="section-title" style="font-size:15px">Community Feed</div>
+    <div class="cz-panel-actions" id="vent-filters" style="gap:6px;flex-wrap:wrap">
+      <div class="cz-tool vent-filter active" onclick="ventFilter(this,'All')">All</div>
+      <div class="cz-tool vent-filter" onclick="ventFilter(this,'Stress')">Stress</div>
+      <div class="cz-tool vent-filter" onclick="ventFilter(this,'Anxiety')">Anxiety</div>
+      <div class="cz-tool vent-filter" onclick="ventFilter(this,'Relationships')">Relationships</div>
+      <div class="cz-tool vent-filter" onclick="ventFilter(this,'Career')">Career</div>
+      <div class="cz-tool vent-filter" onclick="ventFilter(this,'Studies')">Studies</div>
+      <div class="cz-tool vent-filter" onclick="ventFilter(this,'Family')">Family</div>
+    </div>
+  </div>
+  <div id="vent-feed"></div>
+</div>
+
+<!-- ════════════ EMERGENCY & SOS ════════════ -->
+<div class="page" id="page-emergency">
+  <div class="section-header">
+    <div>
+      <div class="section-title">🚨 Emergency & SOS</div>
+      <div class="section-sub">One tap to call for help, share your location, or reach a saved contact</div>
+    </div>
+  </div>
+
+  <div style="padding:18px;border-radius:12px;background:rgba(242,139,130,.08);border:1px solid rgba(242,139,130,.28);margin-bottom:22px;font-size:12.5px;line-height:1.55;color:var(--muted)">
+    ⚠️ For your safety, phones don't allow any app — including this one — to place a call automatically without a tap. The SOS button below gets you to a call in one tap instead. If this is a life-threatening emergency, call your local emergency number directly right now.
+  </div>
+
+  <div class="grid-2 mb-20">
+    <div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:32px 22px">
+      <button onclick="openSOS()" style="width:130px;height:130px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 8px 26px rgba(242,139,130,.45);animation:sosPulse 2s infinite">SOS<br><span style="font-size:11px;font-weight:500">tap for help</span></button>
+      <div style="font-size:12px;color:var(--muted)">Opens emergency number, all saved contacts, and your location — ready to send in one tap each.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">📍 My Location</div>
+      <div class="card-sub">Only fetched when you tap the button — never automatic</div>
+      <button class="btn btn-cyan" style="width:100%;justify-content:center;margin-bottom:12px" onclick="fetchLocation()" id="loc-btn">📍 Share My Live Location</button>
+      <div id="loc-result" style="font-size:12.5px;color:var(--muted)">Location not fetched yet.</div>
+    </div>
+  </div>
+
+  <div class="card mb-20">
+    <div class="card-title">📞 Emergency Number</div>
+    <div class="card-sub">Default is India's unified emergency number — change if you're elsewhere</div>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="sos-primary-number" class="ai-input" value="112" style="max-width:140px" oninput="updateSOSNumber(this.value)">
+      <a class="btn btn-red" id="sos-primary-call-btn" href="tel:112" onclick="copyNumberFallback(this.href.replace('tel:',''))" style="text-decoration:none">📞 Call Now</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">👪 Family & Trusted Emergency Contacts</div>
+    <div class="card-sub">Saved here for this session — shown as one-tap call/text options during SOS</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <input type="text" id="ec-name" class="ai-input" placeholder="Name (e.g. Mom)" style="flex:1;min-width:120px">
+      <input type="text" id="ec-relation" class="ai-input" placeholder="Relation" style="flex:1;min-width:100px">
+      <input type="tel" id="ec-phone" class="ai-input" placeholder="Phone number" style="flex:1;min-width:130px">
+      <button class="btn btn-primary" onclick="addEmergencyContact()">+ Add</button>
+    </div>
+    <div id="emergency-contacts-list"></div>
+  </div>
+</div>
+
+<div class="sos-overlay" id="sosOverlay">
+  <div class="sos-modal">
+    <div style="font-size:17px;font-weight:700;color:var(--red);margin-bottom:4px">🚨 Emergency SOS</div>
+    <div style="font-size:12.5px;color:var(--muted);margin-bottom:16px">Tap any option below — each opens your phone's dialer or messages ready to send.</div>
+    <a class="btn btn-red" id="sos-modal-call-btn" href="tel:112" onclick="copyNumberFallback(this.href.replace('tel:',''))" style="width:100%;justify-content:center;margin-bottom:10px;padding:12px;text-decoration:none;box-sizing:border-box">📞 Call Emergency Services (<span id="sos-modal-number">112</span>)</a>
+    <div id="sos-modal-contacts"></div>
+    <button class="btn btn-cyan" style="width:100%;justify-content:center;margin:10px 0" onclick="fetchLocation(true)">📍 Get & Share My Location</button>
+    <div id="sos-modal-location" style="font-size:11.5px;color:var(--muted);margin-bottom:12px"></div>
+    <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="closeSOS()">Close</button>
+  </div>
+</div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script src="js/core-state.js"></script>
+<script src="js/core-nav.js"></script>
+<script src="js/core-visuals.js"></script>
+<script src="js/ai-helper.js"></script>
+<script src="js/modules/fearmap.js"></script>
+<script src="js/modules/situation.js"></script>
+<script src="js/modules/emotion.js"></script>
+<script src="js/modules/facial.js"></script>
+<script src="js/modules/simulator.js"></script>
+<script src="js/modules/music.js"></script>
+<script src="js/modules/recommendations.js"></script>
+<script src="js/modules/journal.js"></script>
+<script src="js/modules/goals.js"></script>
+<script src="js/modules/support.js"></script>
+<script src="js/calmzone/switcher.js"></script>
+<script src="js/calmzone/sfx.js"></script>
+<script src="js/calmzone/bubble-world.js"></script>
+<script src="js/calmzone/gravity-sandbox.js"></script>
+<script src="js/calmzone/light-painter.js"></script>
+<script src="js/calmzone/sand-art.js"></script>
+<script src="js/calmzone/magnet-toys.js"></script>
+<script src="js/calmzone/tiny-ecosystem.js"></script>
+<script src="js/calmzone/pop-it.js"></script>
+<script src="js/calmzone/bubble-wrap.js"></script>
+<script src="js/calmzone/fidget-spinner.js"></script>
+<script src="js/calmzone/stress-ball.js"></script>
+<script src="js/calmzone/newtons-cradle.js"></script>
+<script src="js/calmzone/zen-rake.js"></script>
+<script src="js/calmzone/wind-chimes.js"></script>
+<script src="js/calmzone/balloon-float.js"></script>
+<script src="js/ai-status.js"></script>
+<script src="js/emergency.js"></script>
+<script src="js/vent-space.js"></script>
+</body>
+</html>
