@@ -1,1 +1,168 @@
+/* MindSphere — Soft Wellness Palette
+   Soft blues + muted greens + gentle lavender.
+   Load this AFTER css/style.css
+*/
+:root{
+  --navy:#F6F8FC;
+  --navy2:#FFFFFF;
+  --navy3:#EEF3F7;
+
+  --violet:#9BBCE0;
+  --violet2:#6E96BE;
+  --violet-glow:rgba(155,188,224,.20);
+
+  --cyan:#AFC8B5;
+  --cyan-glow:rgba(175,200,181,.20);
+
+  --lavender:#C8BDE5;
+  --pink:#E8CBD8;
+  --pink-text:#9A657A;
+
+  --white:#344054;
+  --muted:#667085;
+  --card:#FFFFFF;
+  --border:rgba(110,150,190,.18);
+
+  --green:#79A987;
+  --orange:#D8B36A;
+  --red:#D98F98;
+
+  --cyan-text:#557D61;
+  --lavender-text:#76688F;
+}
+
+/* Global surfaces */
+body{
+  background:var(--navy);
+  color:var(--white);
+}
+.sidebar,
+.card,
+.stat-card,
+.cz-card,
+.cz-panel,
+.sos-modal{
+  background:var(--card);
+  border-color:var(--border);
+}
+.topbar{
+  background:rgba(246,248,252,.90);
+  border-color:var(--border);
+}
+
+/* Brand */
+.logo-icon,
+.user-avatar{
+  background:linear-gradient(135deg,var(--violet),var(--lavender));
+}
+.logo-name{
+  background:linear-gradient(90deg,var(--white),var(--lavender));
+  -webkit-background-clip:text;
+  background-clip:text;
+}
+
+/* Navigation */
+.nav-item:hover{background:rgba(155,188,224,.12);color:var(--lavender-text)}
+.nav-item.active{background:rgba(155,188,224,.16);border-color:var(--border)}
+.user-card{background:var(--navy3)}
+
+/* Primary controls */
+.btn-primary{
+  background:var(--violet);
+  color:#fff;
+}
+.btn-primary:hover{background:var(--violet2)}
+.btn-outline{
+  border-color:var(--border);
+  color:var(--violet2);
+}
+.btn-outline:hover{background:var(--violet-glow)}
+.btn-cyan{
+  background:rgba(175,200,181,.20);
+  border-color:rgba(175,200,181,.45);
+  color:var(--cyan-text);
+}
+.btn-cyan:hover{background:rgba(175,200,181,.28)}
+
+/* Inputs */
+.ai-input{
+  background:rgba(52,64,84,.035);
+  border-color:var(--border);
+  color:var(--white);
+}
+.ai-input:focus{border-color:var(--violet)}
+
+/* AI / wellness surfaces */
+.ai-response{
+  background:rgba(155,188,224,.10);
+  border-color:rgba(155,188,224,.25);
+  color:var(--lavender-text);
+}
+.brain-canvas-wrap{
+  background:linear-gradient(135deg,rgba(155,188,224,.08),rgba(175,200,181,.08));
+  border-color:var(--border);
+}
+.model-banner{
+  background:rgba(175,200,181,.08);
+  border-color:rgba(175,200,181,.22);
+}
+.mood-pill{
+  background:rgba(175,200,181,.12);
+  border-color:rgba(175,200,181,.32);
+  color:var(--cyan-text);
+}
+
+/* Cards / list items */
+.journal-entry,
+.goal-item,
+.music-card,
+.cz-tool,
+.env-option,
+.sos-contact-row{
+  background:rgba(52,64,84,.025);
+  border-color:var(--border);
+}
+.goal-item:hover,
+.music-card:hover,
+.music-card.playing{
+  background:rgba(155,188,224,.10);
+}
+.goal-item.done{
+  background:rgba(121,169,135,.08);
+  border-color:rgba(121,169,135,.30);
+}
+.goal-item.done .goal-check{
+  background:var(--green);
+  border-color:var(--green);
+}
+
+/* Calm Zone */
+.cz-card:hover{
+  box-shadow:0 10px 28px rgba(155,188,224,.20);
+  border-color:var(--violet);
+}
+.cz-tool.active,
+.env-option.selected{
+  border-color:var(--cyan);
+  background:var(--cyan-glow);
+  color:var(--cyan-text);
+}
+.cz-canvas-wrap{background:var(--navy3)}
+
+/* Chips */
+.chip-violet{background:rgba(155,188,224,.16);color:var(--violet2)}
+.chip-cyan{background:rgba(175,200,181,.20);color:var(--cyan-text)}
+.chip-green{background:rgba(121,169,135,.15);color:var(--green)}
+.chip-orange{background:rgba(216,179,106,.16);color:#9A7A3F}
+.chip-red{background:rgba(217,143,152,.15);color:#A75D68}
+.chip-pink{background:rgba(232,203,216,.45);color:var(--pink-text)}
+
+/* Sliders / accents */
+input[type=range]::-webkit-slider-thumb{background:var(--violet)}
+.mic-bar{background:var(--violet)}
+.eq-bar{background:var(--cyan)}
+::-webkit-scrollbar-thumb{background:var(--violet)}
+
+/* SOS keeps a distinct safety accent */
+#sosFloatBtn{background:var(--red)}
 
