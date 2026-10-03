@@ -1,168 +1,335 @@
-/* MindSphere — Soft Wellness Palette
-   Soft blues + muted greens + gentle lavender.
-   Load this AFTER css/style.css
+
+/* MindSphere — Stronger Premium Soft Blue + Sage + Lavender Palette
+   Load AFTER css/style.css
 */
-:root{
-  --navy:#F6F8FC;
-  --navy2:#FFFFFF;
-  --navy3:#EEF3F7;
 
-  --violet:#9BBCE0;
-  --violet2:#6E96BE;
-  --violet-glow:rgba(155,188,224,.20);
+/* ---------- Core palette ---------- */
+:root {
+  --navy: #F3F6FB !important;
+  --navy2: #FFFFFF !important;
+  --navy3: #EAF1F8 !important;
 
-  --cyan:#AFC8B5;
-  --cyan-glow:rgba(175,200,181,.20);
+  --violet: #7FAED6 !important;
+  --violet2: #5F8FBE !important;
 
-  --lavender:#C8BDE5;
-  --pink:#E8CBD8;
-  --pink-text:#9A657A;
+  --cyan: #91B9A0 !important;
+  --green: #6E9E7E !important;
 
-  --white:#344054;
-  --muted:#667085;
-  --card:#FFFFFF;
-  --border:rgba(110,150,190,.18);
+  --lavender: #B8A9D9 !important;
+  --lavender-bg: #F2EEFA !important;
 
-  --green:#79A987;
-  --orange:#D8B36A;
-  --red:#D98F98;
+  --white: #26364D !important;
+  --muted: #66758A !important;
 
-  --cyan-text:#557D61;
-  --lavender-text:#76688F;
+  --pink: #D69BB2 !important;
+  --red: #D95D6B !important;
+
+  --border: #D7E2EE !important;
+  --shadow: 0 8px 28px rgba(70, 96, 125, .08) !important;
 }
 
-/* Global surfaces */
-body{
-  background:var(--navy);
-  color:var(--white);
+/* ---------- Page / typography ---------- */
+html, body {
+  background: #F3F6FB !important;
+  color: #26364D !important;
 }
+
+body {
+  background:
+    radial-gradient(circle at 88% 5%, rgba(184,169,217,.14), transparent 24%),
+    radial-gradient(circle at 12% 25%, rgba(127,174,214,.12), transparent 28%),
+    #F3F6FB !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #26364D !important;
+}
+
+p, span, label {
+  color: inherit;
+}
+
+.muted, .text-muted, small {
+  color: #66758A !important;
+}
+
+/* ---------- Sidebar ---------- */
 .sidebar,
+aside,
+[class*="sidebar"] {
+  background: linear-gradient(180deg, #EEF5FB 0%, #F5F2FA 100%) !important;
+  border-right: 1px solid #D5E2EF !important;
+}
+
+.sidebar .brand,
+.sidebar-header {
+  background: rgba(255,255,255,.62) !important;
+}
+
+.sidebar a,
+.sidebar button,
+aside a,
+aside button {
+  color: #536781 !important;
+  border-radius: 12px !important;
+}
+
+.sidebar a:hover,
+.sidebar button:hover,
+aside a:hover,
+aside button:hover {
+  background: #E2EDF7 !important;
+  color: #365B80 !important;
+}
+
+.sidebar .active,
+.sidebar a.active,
+.sidebar button.active,
+aside .active {
+  background: linear-gradient(90deg, #DCEBFA 0%, #EAE3F7 100%) !important;
+  color: #315C85 !important;
+  border: 1px solid #C9DCEE !important;
+  box-shadow: 0 4px 14px rgba(95,143,190,.10) !important;
+}
+
+/* ---------- Main content ---------- */
+main,
+.main,
+.content,
+.page-content {
+  background: transparent !important;
+}
+
+/* ---------- Cards ---------- */
 .card,
+.panel,
 .stat-card,
-.cz-card,
-.cz-panel,
-.sos-modal{
-  background:var(--card);
-  border-color:var(--border);
-}
-.topbar{
-  background:rgba(246,248,252,.90);
-  border-color:var(--border);
+[class*="card"],
+[class*="panel"] {
+  background: rgba(255,255,255,.94) !important;
+  border-color: #D7E2EE !important;
+  box-shadow: 0 7px 24px rgba(74, 99, 127, .07) !important;
 }
 
-/* Brand */
-.logo-icon,
-.user-avatar{
-  background:linear-gradient(135deg,var(--violet),var(--lavender));
-}
-.logo-name{
-  background:linear-gradient(90deg,var(--white),var(--lavender));
-  -webkit-background-clip:text;
-  background-clip:text;
+.card:hover,
+.panel:hover {
+  border-color: #C3D7EA !important;
 }
 
-/* Navigation */
-.nav-item:hover{background:rgba(155,188,224,.12);color:var(--lavender-text)}
-.nav-item.active{background:rgba(155,188,224,.16);border-color:var(--border)}
-.user-card{background:var(--navy3)}
-
-/* Primary controls */
-.btn-primary{
-  background:var(--violet);
-  color:#fff;
-}
-.btn-primary:hover{background:var(--violet2)}
-.btn-outline{
-  border-color:var(--border);
-  color:var(--violet2);
-}
-.btn-outline:hover{background:var(--violet-glow)}
-.btn-cyan{
-  background:rgba(175,200,181,.20);
-  border-color:rgba(175,200,181,.45);
-  color:var(--cyan-text);
-}
-.btn-cyan:hover{background:rgba(175,200,181,.28)}
-
-/* Inputs */
-.ai-input{
-  background:rgba(52,64,84,.035);
-  border-color:var(--border);
-  color:var(--white);
-}
-.ai-input:focus{border-color:var(--violet)}
-
-/* AI / wellness surfaces */
-.ai-response{
-  background:rgba(155,188,224,.10);
-  border-color:rgba(155,188,224,.25);
-  color:var(--lavender-text);
-}
-.brain-canvas-wrap{
-  background:linear-gradient(135deg,rgba(155,188,224,.08),rgba(175,200,181,.08));
-  border-color:var(--border);
-}
-.model-banner{
-  background:rgba(175,200,181,.08);
-  border-color:rgba(175,200,181,.22);
-}
-.mood-pill{
-  background:rgba(175,200,181,.12);
-  border-color:rgba(175,200,181,.32);
-  color:var(--cyan-text);
+/* ---------- Primary blue buttons ---------- */
+button.primary,
+.btn-primary,
+.primary-btn,
+button[class*="primary"],
+a[class*="primary"] {
+  background: linear-gradient(135deg, #7FAED6 0%, #6B99C5 100%) !important;
+  color: #FFFFFF !important;
+  border-color: #6B99C5 !important;
+  box-shadow: 0 6px 16px rgba(95,143,190,.18) !important;
 }
 
-/* Cards / list items */
-.journal-entry,
-.goal-item,
-.music-card,
-.cz-tool,
-.env-option,
-.sos-contact-row{
-  background:rgba(52,64,84,.025);
-  border-color:var(--border);
-}
-.goal-item:hover,
-.music-card:hover,
-.music-card.playing{
-  background:rgba(155,188,224,.10);
-}
-.goal-item.done{
-  background:rgba(121,169,135,.08);
-  border-color:rgba(121,169,135,.30);
-}
-.goal-item.done .goal-check{
-  background:var(--green);
-  border-color:var(--green);
+button.primary:hover,
+.btn-primary:hover,
+.primary-btn:hover,
+button[class*="primary"]:hover,
+a[class*="primary"]:hover {
+  background: linear-gradient(135deg, #709FCB 0%, #5F8FBE 100%) !important;
 }
 
-/* Calm Zone */
-.cz-card:hover{
-  box-shadow:0 10px 28px rgba(155,188,224,.20);
-  border-color:var(--violet);
+/* ---------- Secondary buttons ---------- */
+button.secondary,
+.btn-secondary,
+.secondary-btn {
+  background: #F4F8FC !important;
+  color: #52759A !important;
+  border-color: #C8D9E9 !important;
 }
-.cz-tool.active,
-.env-option.selected{
-  border-color:var(--cyan);
-  background:var(--cyan-glow);
-  color:var(--cyan-text);
+
+button.secondary:hover,
+.btn-secondary:hover,
+.secondary-btn:hover {
+  background: #E8F1F9 !important;
 }
-.cz-canvas-wrap{background:var(--navy3)}
 
-/* Chips */
-.chip-violet{background:rgba(155,188,224,.16);color:var(--violet2)}
-.chip-cyan{background:rgba(175,200,181,.20);color:var(--cyan-text)}
-.chip-green{background:rgba(121,169,135,.15);color:var(--green)}
-.chip-orange{background:rgba(216,179,106,.16);color:#9A7A3F}
-.chip-red{background:rgba(217,143,152,.15);color:#A75D68}
-.chip-pink{background:rgba(232,203,216,.45);color:var(--pink-text)}
+/* ---------- Green / calm actions ---------- */
+button.success,
+.btn-success,
+.success,
+.calm,
+[class*="calm"] button {
+  background: linear-gradient(135deg, #A8C8B2 0%, #8DB69B 100%) !important;
+  color: #244C35 !important;
+  border-color: #8DB69B !important;
+}
 
-/* Sliders / accents */
-input[type=range]::-webkit-slider-thumb{background:var(--violet)}
-.mic-bar{background:var(--violet)}
-.eq-bar{background:var(--cyan)}
-::-webkit-scrollbar-thumb{background:var(--violet)}
+.green,
+.badge-green,
+.status-success {
+  background: #E4F1E8 !important;
+  color: #477455 !important;
+  border-color: #BDD8C5 !important;
+}
 
-/* SOS keeps a distinct safety accent */
-#sosFloatBtn{background:var(--red)}
+/* ---------- Lavender / emotion / AI elements ---------- */
+.lavender,
+.ai-card,
+.ai-response,
+.emotion-card,
+[class*="emotion"],
+[class*="ai-card"] {
+  border-color: #D8CFEA !important;
+}
 
+.ai-response,
+.ai-message {
+  background: linear-gradient(135deg, #F4F0FB 0%, #EEF5FB 100%) !important;
+  color: #40516A !important;
+}
+
+.lavender-bg {
+  background: #F2EEFA !important;
+}
+
+.lavender-accent,
+.badge-lavender,
+.chip-lavender {
+  background: #E8E0F4 !important;
+  color: #66558A !important;
+  border-color: #D2C5E6 !important;
+}
+
+/* ---------- Inputs ---------- */
+input,
+textarea,
+select {
+  background: #FFFFFF !important;
+  color: #33455D !important;
+  border: 1px solid #CCD9E7 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #8A98A9 !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #8FB5D8 !important;
+  box-shadow: 0 0 0 3px rgba(127,174,214,.16) !important;
+  outline: none !important;
+}
+
+/* ---------- Chips / tags ---------- */
+.chip,
+.badge,
+.tag {
+  background: #EDF3F8 !important;
+  color: #526B84 !important;
+  border-color: #D5E1EC !important;
+}
+
+.chip.active,
+.tag.active,
+.badge.active {
+  background: #E4DDF2 !important;
+  color: #62527F !important;
+  border-color: #CFC1E5 !important;
+}
+
+/* ---------- Progress / sliders ---------- */
+progress {
+  accent-color: #7FAED6 !important;
+}
+
+input[type="range"] {
+  accent-color: #7FAED6 !important;
+}
+
+/* ---------- Calm Zone ---------- */
+.calm-zone,
+#calm-zone,
+[class*="calm-zone"] {
+  background: linear-gradient(135deg, #EEF7F1 0%, #F1F0FA 100%) !important;
+  border-color: #C8DCCF !important;
+}
+
+/* ---------- Dashboard stat accents ---------- */
+.stat-card:nth-child(1) {
+  border-top: 3px solid #7FAED6 !important;
+}
+
+.stat-card:nth-child(2) {
+  border-top: 3px solid #91B9A0 !important;
+}
+
+.stat-card:nth-child(3) {
+  border-top: 3px solid #B8A9D9 !important;
+}
+
+.stat-card:nth-child(4) {
+  border-top: 3px solid #D69BB2 !important;
+}
+
+/* ---------- Alerts ---------- */
+.alert,
+.notice,
+.warning {
+  background: #FFF7F1 !important;
+  border-color: #F1D5C2 !important;
+  color: #765B4D !important;
+}
+
+.error,
+.danger {
+  background: #FFF0F2 !important;
+  border-color: #F0C1C8 !important;
+  color: #8E4652 !important;
+}
+
+/* ---------- SOS stays clearly emergency ---------- */
+.sos,
+#sos,
+.sos-button,
+button.sos {
+  background: #D95D6B !important;
+  color: #FFFFFF !important;
+  border-color: #C74E5C !important;
+  box-shadow: 0 7px 20px rgba(217,93,107,.24) !important;
+}
+
+/* ---------- Dividers / navigation headings ---------- */
+hr,
+.divider {
+  border-color: #DCE5EE !important;
+}
+
+.section-title,
+.sidebar-section-title {
+  color: #718096 !important;
+}
+
+/* ---------- Small brand icon / logo treatment ---------- */
+.logo,
+.brand-icon {
+  background: linear-gradient(135deg, #C9DDF1 0%, #D9D0EA 100%) !important;
+  border-color: #BFD3E7 !important;
+}
+
+/* ---------- Avoid overly strong black text inherited from old theme ---------- */
+.card *,
+.panel * {
+  border-color: inherit;
+}
+
+.card .value,
+.stat-card .value,
+.metric-value {
+  color: #40566F !important;
+}
+
+.card .label,
+.stat-card .label,
+.metric-label {
+  color: #718096 !important;
+}
